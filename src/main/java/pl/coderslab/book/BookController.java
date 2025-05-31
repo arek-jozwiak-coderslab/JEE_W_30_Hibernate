@@ -3,9 +3,12 @@ package pl.coderslab.book;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -18,6 +21,27 @@ public class BookController {
     public BookController(BookDao bookDao, PublisherDao publisherDao) {
         this.bookDao = bookDao;
         this.publisherDao = publisherDao;
+    }
+
+    @GetMapping("/list")
+    @ResponseBody
+    public String getList() {
+        return bookDao.findAll()
+                .stream()
+                .map(b -> b.getTitle().concat(" - ").concat(b.getId().toString()))
+                .collect(Collectors.joining(", "));
+    }
+
+    @GetMapping("/list-rating/{rating}")
+    @ResponseBody
+    public String getList(@PathVariable int rating) {
+        return bookDao.findAllByRating(rating)
+                .stream()
+                .map(b -> b.getTitle().concat(" - ")
+                        .concat(b.getId().toString())
+                        .concat(" - ").concat(b.getRating() + " ")
+                )
+                .collect(Collectors.joining(", "));
     }
 
     @RequestMapping("/add")
