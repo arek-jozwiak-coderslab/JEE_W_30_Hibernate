@@ -24,6 +24,16 @@ public class BookController {
         this.bookRepository = bookRepository;
     }
 
+    @GetMapping("/list-category/{categoryId}")
+    @ResponseBody
+    public String getListRepoByCategoryId(@PathVariable Long categoryId) {
+
+        return bookRepository.findByCategoryId(categoryId)
+                .stream()
+                .map(b -> b.getTitle().concat(" - ").concat(b.getId().toString()))
+                .collect(Collectors.joining(", "));
+    }
+
     @GetMapping("/list-repo")
     @ResponseBody
     public String getListRepo() {

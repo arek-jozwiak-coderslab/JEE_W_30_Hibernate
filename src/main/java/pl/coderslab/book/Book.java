@@ -16,6 +16,9 @@ public class Book {
     @ManyToOne
     private Publisher publisher;
 
+    @ManyToOne
+    private Category category;
+
     public Book(String title, int rating, String description) {
         this.title = title;
         this.rating = rating;
