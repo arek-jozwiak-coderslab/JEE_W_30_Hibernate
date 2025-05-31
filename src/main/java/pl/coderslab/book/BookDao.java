@@ -22,13 +22,6 @@ public class BookDao {
                 .getResultList();
     }
 
-    public List<Book> findAllByRating(int rating) {
-        return entityManager
-                .createQuery("select b from Book b where b.rating = :myRating", Book.class)
-                .setParameter("myRating", rating)
-                .getResultList();
-    }
-
     public void saveBook(Book book) {
         entityManager.persist(book);
     }
@@ -50,5 +43,12 @@ public class BookDao {
         return entityManager.createQuery("SELECT b FROM Book b WHERE b.title = :t", Book.class)
                 .setParameter("t", title)
                 .getSingleResult();
+    }
+
+    public List<Book> findAllByRating(int rating) {
+        return entityManager
+                .createQuery("select b from Book b where b.rating = :myRating", Book.class)
+                .setParameter("myRating", rating)
+                .getResultList();
     }
 }

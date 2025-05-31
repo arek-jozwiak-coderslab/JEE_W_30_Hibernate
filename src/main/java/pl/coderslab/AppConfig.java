@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManagerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -22,6 +23,7 @@ import java.util.List;
 @EnableWebMvc
 @ComponentScan(basePackages = "pl.coderslab")
 @EnableTransactionManagement
+@EnableJpaRepositories
 public class AppConfig implements WebMvcConfigurer {
 
     @Override
