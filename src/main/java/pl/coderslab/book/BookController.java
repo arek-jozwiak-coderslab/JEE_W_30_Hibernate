@@ -1,12 +1,17 @@
 package pl.coderslab.book;
 
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import org.springframework.stereotype.Controller;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -14,11 +19,14 @@ import java.util.stream.Collectors;
 @RequestMapping("/books")
 public class BookController {
 
+    private final Validator validator;
+
     private final BookDao bookDao;
     private final PublisherDao publisherDao;
     private final BookRepository bookRepository;
 
-    public BookController(BookDao bookDao, PublisherDao publisherDao, BookRepository bookRepository) {
+    public BookController(Validator validator, BookDao bookDao, PublisherDao publisherDao, BookRepository bookRepository) {
+        this.validator = validator;
         this.bookDao = bookDao;
         this.publisherDao = publisherDao;
         this.bookRepository = bookRepository;
@@ -98,5 +106,23 @@ public class BookController {
     public String deleteBook(@PathVariable long id) {
         bookDao.delete(id);
         return "deleted";
+    }
+
+    @GetMapping("/simple-validate")
+    @ResponseBody
+    public String simpleValidate() {
+        Book book = new Book("", 5, "Test Description");
+
+        Set<ConstraintViolation<Book>> validate = validator.validate(book);
+        if (validate.isEmpty()) {
+            //save book
+        } else {
+            return validate.stream()
+                    .map(cv ->
+                            cv.getPropertyPath() + " : " + cv.getMessage())
+                    .collect(Collectors.joining(", "));
+        }
+
+        return "done";
     }
 }
